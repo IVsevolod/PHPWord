@@ -285,4 +285,76 @@ abstract class AbstractContainer extends AbstractElement
 
         return true;
     }
+
+    /**
+     * Возвращает сколько элементов до этого элемента или false, если такого нет
+     * @param AbstractElement $element
+     * @return int|null
+     */
+    public function getOffsetElement(AbstractElement $element): ?int
+    {
+        $resultOffset = 0;
+        $elementFound = false;
+        foreach ($this->elements as $key => $elementItem) {
+            if ($elementItem->getElementId() === $element->getElementId()) {
+                $elementFound = true;
+                break;
+            } else {
+                $resultOffset++;
+            }
+        }
+        return $elementFound ? $resultOffset : null;
+    }
+
+    /**
+     * Вставляет элементы со смещением $offsetIndex, пересчитывает индексы, устанавливает новые id для вставляемых
+     * @param $offsetIndex
+     * @param array $newElements
+     * @return void
+     */
+    private function insertElements($offsetIndex, array $newElements): void
+    {
+        foreach ($newElements as $element) {
+            /** @var AbstractElement $element */
+            $element->setElementId();;
+        }
+        array_splice($this->elements, $offsetIndex, 0, $newElements);
+        for ($i = $offsetIndex; $i < $this->countElements(); $i++) {
+            $this->elements[$i]->setElementIndex($i + 1);
+        }
+    }
+
+    /**
+     * Вставляет элементы после элемента $element
+     * @param AbstractElement $element
+     * @param array $newElements
+     * @return bool
+     */
+    public function insertElementsAfter(AbstractElement $element, array $newElements): bool
+    {
+        $offsetIndex = $this->getOffsetElement($element);
+        if (is_null($offsetIndex)) {
+            return false;
+        }
+
+        $this->insertElements($offsetIndex + 1, $newElements);
+        return true;
+    }
+
+    /**
+     * Вставляет элементы до элемента $element
+     * @param AbstractElement $element
+     * @param array $newElements
+     * @return bool
+     */
+    public function insertElementsBefore(AbstractElement $element, array $newElements): bool
+    {
+        $offsetIndex = $this->getOffsetElement($element);
+        if (is_null($offsetIndex)) {
+            return false;
+        }
+
+        $this->insertElements($offsetIndex, $newElements);
+        return true;
+    }
 }
