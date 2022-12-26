@@ -76,6 +76,9 @@ class Word2007 extends AbstractReader implements ReaderInterface
                 }
             }
         }
+        if (!empty($relationships['copyFile'])) {
+            $phpWord->setCopyFiles($relationships['copyFile']);
+        }
 
         return $phpWord;
     }

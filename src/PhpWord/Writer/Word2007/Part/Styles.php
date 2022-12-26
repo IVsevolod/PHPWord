@@ -187,20 +187,24 @@ class Styles extends AbstractPart
                 $styleName = strtolower($styleName);
                 $styleLink = $styleName . 'Char';
             }
-            $xmlWriter->writeAttribute('w:styleId', $styleId);
+            $xmlWriter->writeAttribute('w:styleId', $style->getStyleId() ?: $styleId);
 
             $xmlWriter->startElement('w:link');
             $xmlWriter->writeAttribute('w:val', $styleLink);
             $xmlWriter->endElement();
         } elseif (null !== $paragraphStyle) {
             // if type is 'paragraph' it should have a styleId
-            $xmlWriter->writeAttribute('w:styleId', $styleName);
+            $xmlWriter->writeAttribute('w:styleId', $style->getStyleId() ?: $styleName);
         }
 
         // Style name
         $xmlWriter->startElement('w:name');
         $xmlWriter->writeAttribute('w:val', $styleName);
         $xmlWriter->endElement();
+
+        if ($style->getQFormat() !== null) {
+            $xmlWriter->writeElement('w:qFormat', '');
+        }
 
         // Parent style
         if (null !== $paragraphStyle) {
@@ -234,7 +238,7 @@ class Styles extends AbstractPart
         $xmlWriter->startElement('w:style');
         $xmlWriter->writeAttribute('w:type', 'paragraph');
         $xmlWriter->writeAttribute('w:customStyle', '1');
-        $xmlWriter->writeAttribute('w:styleId', $styleName);
+        $xmlWriter->writeAttribute('w:styleId', $style->getStyleId() ?: $styleName);
         $xmlWriter->startElement('w:name');
         $xmlWriter->writeAttribute('w:val', $styleName);
         $xmlWriter->endElement();

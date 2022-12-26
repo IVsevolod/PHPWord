@@ -138,6 +138,11 @@ class Word2007 extends AbstractWriter implements WriterInterface
                 $zip->addFromString($fileName, $this->getWriterPart($partName)->write());
             }
         }
+        if (!empty($phpWord->getCopyFiles())) {
+            foreach ($phpWord->getCopyFiles() as $fileInfo) {
+                $zip->addFromString($fileInfo['filename'], $fileInfo['content']);
+            }
+        }
 
         // Close zip archive and cleanup temp file
         $zip->close();

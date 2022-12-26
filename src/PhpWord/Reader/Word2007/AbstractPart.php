@@ -398,6 +398,7 @@ abstract class AbstractPart
             'styleName' => [self::READ_VALUE, ['w:pStyle', 'w:name']],
             'alignment' => [self::READ_VALUE, 'w:jc'],
             'basedOn' => [self::READ_VALUE, 'w:basedOn'],
+            'qFormat' => [self::READ_TRUE, 'w:qFormat'],
             'next' => [self::READ_VALUE, 'w:next'],
             'indent' => [self::READ_VALUE, 'w:ind', 'w:left'],
             'hanging' => [self::READ_VALUE, 'w:ind', 'w:hanging'],

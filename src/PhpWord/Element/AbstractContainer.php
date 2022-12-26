@@ -47,6 +47,7 @@ use ReflectionClass;
  * @method Chart addChart(string $type, array $categories, array $values, array $style = null, $seriesName = null)
  * @method FormField addFormField(string $type, mixed $fStyle = null, mixed $pStyle = null)
  * @method SDT addSDT(string $type)
+ * @method SDTContent addSDTContent($sdtStyle = null)
  * @method \PhpOffice\PhpWord\Element\OLEObject addObject(string $source, mixed $style = null) deprecated, use addOLEObject instead
  *
  * @since 0.10.0
@@ -87,7 +88,7 @@ abstract class AbstractContainer extends AbstractElement
             'ListItem', 'ListItemRun', 'Table', 'Image', 'Object', 'OLEObject',
             'Footnote', 'Endnote', 'CheckBox', 'TextBox', 'Field',
             'Line', 'Shape', 'Title', 'TOC', 'PageBreak',
-            'Chart', 'FormField', 'SDT', 'Comment',
+            'Chart', 'FormField', 'SDT', 'SDTContent', 'Comment',
         ];
         $functions = [];
         foreach ($elements as $element) {
@@ -226,6 +227,7 @@ abstract class AbstractContainer extends AbstractElement
     {
         $generalContainers = [
             'Section', 'Header', 'Footer', 'Footnote', 'Endnote', 'Cell', 'TextRun', 'TextBox', 'ListItemRun', 'TrackChange',
+            'SDTContent',
         ];
 
         $validContainers = [
@@ -241,7 +243,7 @@ abstract class AbstractContainer extends AbstractElement
             'FormField' => $generalContainers,
             'SDT' => $generalContainers,
             'TrackChange' => $generalContainers,
-            'TextRun' => ['Section', 'Header', 'Footer', 'Cell', 'TextBox', 'TrackChange', 'ListItemRun'],
+            'TextRun' => ['Section', 'Header', 'Footer', 'Cell', 'TextBox', 'TrackChange', 'ListItemRun', 'SDTContent'],
             'ListItem' => ['Section', 'Header', 'Footer', 'Cell', 'TextBox'],
             'ListItemRun' => ['Section', 'Header', 'Footer', 'Cell', 'TextBox'],
             'Table' => ['Section', 'Header', 'Footer', 'Cell', 'TextBox'],
@@ -249,11 +251,12 @@ abstract class AbstractContainer extends AbstractElement
             'TextBox' => ['Section', 'Header', 'Footer', 'Cell'],
             'Footnote' => ['Section', 'TextRun', 'Cell', 'ListItemRun'],
             'Endnote' => ['Section', 'TextRun', 'Cell'],
-            'PreserveText' => ['Section', 'Header', 'Footer', 'Cell'],
+            'PreserveText' => ['Section', 'Header', 'Footer', 'Cell', 'SDTContent'],
             'Title' => ['Section', 'Cell'],
             'TOC' => ['Section'],
             'PageBreak' => ['Section'],
             'Chart' => ['Section', 'Cell'],
+            'SDTContent' => ['Section'],
         ];
 
         // Special condition, e.g. preservetext can only exists in cell when

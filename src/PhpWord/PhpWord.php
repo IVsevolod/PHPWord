@@ -68,6 +68,13 @@ class PhpWord
     private $metadata = [];
 
     /**
+     * Files to copy
+     *
+     * @var array
+     */
+    private $copyFiles = [];
+
+    /**
      * Create new instance.
      *
      * Collections are created dynamically
@@ -324,5 +331,22 @@ class PhpWord
         $writer->save($filename);
 
         return true;
+    }
+
+    /**
+     * @param array $files
+     * @return void
+     */
+    public function setCopyFiles(array $files)
+    {
+        $this->copyFiles = $files;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCopyFiles(): array
+    {
+        return $this->copyFiles;
     }
 }

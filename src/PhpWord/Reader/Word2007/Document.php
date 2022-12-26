@@ -18,6 +18,7 @@
 namespace PhpOffice\PhpWord\Reader\Word2007;
 
 use DOMElement;
+use PhpOffice\PhpWord\Element\SDTContent;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\XMLReader;
@@ -46,7 +47,7 @@ class Document extends AbstractPart
         $this->phpWord = $phpWord;
         $xmlReader = new XMLReader();
         $xmlReader->getDomFromZip($this->docFile, $this->xmlFile);
-        $readMethods = ['w:p' => 'readWPNode', 'w:tbl' => 'readTable', 'w:sectPr' => 'readWSectPrNode'];
+        $readMethods = ['w:p' => 'readWPNode', 'w:tbl' => 'readTable', 'w:sectPr' => 'readWSectPrNode', 'w:sdt' => 'readWSdt'];
 
         $nodes = $xmlReader->getElements('w:body/*');
         if ($nodes->length > 0) {
@@ -169,5 +170,46 @@ class Document extends AbstractPart
         $style = $this->readSectionStyle($xmlReader, $node);
         $section->setStyle($style);
         $this->readHeaderFooter($style, $section);
+    }
+
+
+    private function readSdtWPNode(XMLReader $xmlReader, DOMElement $node, SDTContent $sdtContent): void
+    {
+        // Paragraph
+        $this->readParagraph($xmlReader, $node, $sdtContent);
+
+        // Section properties
+        if ($xmlReader->elementExists('w:pPr/w:sectPr', $node)) {
+            $sectPrNode = $xmlReader->getElement('w:pPr/w:sectPr', $node);
+            if ($sectPrNode !== null) {
+                $this->readWSectPrNode($xmlReader, $sectPrNode, $section);
+            }
+            $section = $this->phpWord->addSection();
+        }
+    }
+
+    private function readWSdt(XMLReader $xmlReader, DOMElement $node, Section &$section): void
+    {
+        if ($xmlReader->elementExists('w:sdtContent', $node)) {
+            $sdt = $section->addSDTContent();
+            // Чтобы ничего не потерялось, всё в строку сохраняется в content
+            $nodes = $xmlReader->getElements('*', $node);
+            $contents = [];
+            foreach ($nodes as $nodeItem) {
+                /** @var DOMElement $nodeItem */
+                $contents[] = $nodeItem->C14N();
+            }
+            $sdt->setContent(join('', $contents));
+
+            // Для чтения элементов в структуру
+//            $nodes = $xmlReader->getElements('w:sdtContent/*', $node);
+//            if ($nodes->length > 0) {
+//                foreach ($nodes as $node) {
+//                    if ($node->nodeName === 'w:p') {
+//                        $this->readParagraph($xmlReader, $node, $sdt);
+//                    }
+//                }
+//            }
+        }
     }
 }

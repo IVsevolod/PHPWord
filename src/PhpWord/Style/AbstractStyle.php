@@ -27,6 +27,19 @@ use PhpOffice\PhpWord\Shared\Text;
  */
 abstract class AbstractStyle
 {
+
+    /**
+     * Style id.
+     *
+     * @var null|string
+     */
+    protected $styleId = null;
+
+    /**
+     * @var null|bool
+     */
+    private $qFormat = null;
+
     /**
      * Style name.
      *
@@ -81,6 +94,46 @@ abstract class AbstractStyle
         $this->styleName = $value;
 
         return $this;
+    }
+    /**
+     * Get style name.
+     *
+     * @return null|string
+     */
+    public function getStyleId()
+    {
+        return $this->styleId;
+    }
+
+    /**
+     * Set style id.
+     *
+     * @param null|string $value
+     *
+     * @return self
+     */
+    public function setStyleId($value)
+    {
+        $this->styleId = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getQFormat()
+    {
+        return $this->qFormat;
+    }
+
+    /**
+     * @param null|bool $value
+     * @return void
+     */
+    public function setQFormat($value = true)
+    {
+        $this->qFormat = $value;
     }
 
     /**

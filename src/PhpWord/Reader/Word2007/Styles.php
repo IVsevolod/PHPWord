@@ -72,7 +72,14 @@ class Styles extends AbstractPart
                 switch ($type) {
                     case 'paragraph':
                         $paragraphStyle = $this->readParagraphStyle($xmlReader, $node);
+                        $styleId = $xmlReader->getAttribute('w:styleId', $node);
                         $fontStyle = $this->readFontStyle($xmlReader, $node);
+                        if (!empty($styleId)) {
+                            $fontStyle['styleId'] = $styleId;
+                        }
+                        if ($xmlReader->elementExists('w:qFormat', $node)) {
+                            $fontStyle['qFormat'] = true;
+                        }
                         if (!empty($headingMatches)) {
                             $phpWord->addTitleStyle($headingMatches[1], $fontStyle, $paragraphStyle);
                         } else {
